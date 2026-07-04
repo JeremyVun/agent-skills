@@ -73,15 +73,16 @@ One event object; only `p` is required. Primitives:
 | `u` + `st` | gauge | live presence: online total + per-state buckets |
 | `u` | unique | distinct units per window |
 | `k` | dedup | that event's count applied at most once per TTL (6h default) |
-| `sid`, `ts` | — | carried, not aggregated (raw archive will keep them) |
+| `sid`, `ts` | — | carried, not aggregated — kept in the raw event archive (queryable in SQL via DuckDB) |
 
 Modelling rules that trip people up:
 
 - **Numeric values must be bucketed client-side** (`d: {results: "0"|"1-5"|"6-20"|"20+"}`)
   — `n` is a count increment, not a value; there is no avg/percentile primitive.
-- **Joint questions need composite dims composed at emit time**
-  (`d: {"outcome.difficulty": "kill.heroic"}`) — histograms are per-dimension,
-  independent; you cannot join them at read time (until the raw archive ships).
+- **Joint questions on the live dashboard/aggregates need composite dims composed at
+  emit time** (`d: {"outcome.difficulty": "kill.heroic"}`) — histograms are
+  per-dimension, independent, and can't be joined at read time there; post-hoc joint
+  questions can instead be answered from the raw archive with DuckDB SQL.
 - **Funnels** = one counter per step + shared dims; ratios computed at read time.
 - **Presence**: send a beat (`u` + `st`, no `t`) every ~30s; units auto-expire after
   ~75s silence. The TS client's `startHeartbeat()` does this.
@@ -135,9 +136,14 @@ Then verify from the real app flow, not just curl.
 - ✅ Live gauges + window aggregates (`/stats`), hourly time series (`/series`,
   Postgres), generic dashboard (`/ui`).
 - ✅ Contract is additive-only; unknown JSON fields ignored — old clients keep working.
-- ❌ Raw event storage (today): events are aggregated then discarded. Per-session
-  funnels and post-hoc breakdowns are not yet possible. A raw NDJSON→S3 archive is
-  specced in `~/projects/analytics/docs/ARCHIVE_SPEC.md`; once built, `sid`/`ts` become
-  queryable via DuckDB.
+- ✅ Raw event storage: every recorded event is also archived as gzipped NDJSON to an
+  S3-compatible bucket (DigitalOcean Spaces) when the deployment sets the
+  `ANALYTICS_ARCHIVE_*` env vars (off by default), under keys
+  `raw/p=<project>/dt=YYYY-MM-DD/<HHMMSS>-<rand>.ndjson.gz`. `sid`/`ts` are kept, so
+  session funnels and post-hoc breakdowns are possible with DuckDB
+  (`read_json_auto('s3://<bucket>/raw/p=<project>/dt=*/*.ndjson.gz')`). Design record
+  and query recipes: `~/projects/analytics/docs/ARCHIVE_SPEC.md`. Best-effort — the
+  hourly aggregates remain the durable totals — and dedup is NOT applied to the raw
+  stream.
 - ❌ Per-user profiles, retention cohorts, A/B stats — out of scope; compose dims or
-  wait for the archive.
+  query the raw archive.
