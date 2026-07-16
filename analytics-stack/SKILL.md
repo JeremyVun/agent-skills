@@ -1,16 +1,16 @@
 ---
 name: analytics-stack
-description: Onboard a project onto the shared self-hosted analytics service (multi-tenant Go service in ~/projects/analytics). Use when adding analytics/telemetry/event tracking to any project stack, wiring a client to the analytics service, choosing event names/dimensions, or debugging why events aren't showing up in /stats or the /ui dashboard.
+description: Onboard a project onto the shared self-hosted analytics service (multi-tenant Go service in ~/projects/analytics). Use when adding analytics, telemetry, event tracking, or durable user-feedback submission to a project; wiring a client; choosing events/dimensions; or debugging missing events or feedback in the API or /ui dashboard.
 ---
 
 # Onboarding a project onto the shared analytics service
 
 One deployment of the `analytics` service (source: `~/projects/analytics`) serves every
 project. Clients POST small JSON events to `/e`; the service keeps live per-project
-stats in memory, flushes one aggregate row per project per hour to Postgres, and serves
-a generic dashboard at `/ui`. There are no product concepts baked in — you compose
-events from generic primitives. Full wire contract: `~/projects/analytics/README.md`
-(trust it over this skill if they disagree).
+stats in memory, flushes one aggregate row per project per hour to Postgres, optionally
+archives raw events, and serves a generic dashboard at `/ui`. Durable freeform feedback
+uses the separate `/feedback` contract described below. Full wire contract:
+`~/projects/analytics/README.md` (trust it over this skill if they disagree).
 
 **Do not** build a per-project Loki/Promtail pipeline, a bespoke events table, or any
 other analytics backend for a project — this service is the standard path.
@@ -131,6 +131,73 @@ payload on `/stats`, which masks typos).
 
 Then verify from the real app flow, not just curl.
 
+## Durable feedback — separate workflow
+
+Use `POST /feedback` only for user-authored freeform feedback. Never put feedback text,
+category text, or other personal data into `/e` or the raw archive. The feedback route
+stores individual records synchronously in Postgres so operators can review, export,
+and delete them.
+
+Before wiring a product, collect the service URL, the same stable kebab-case project
+key, and its dedicated feedback submission key. The operator must:
+
+- enable `ANALYTICS_FEEDBACK=1` with both `DATABASE_URL` and
+  `ANALYTICS_READ_KEY` configured;
+- register a per-project key in `ANALYTICS_FEEDBACK_KEYS="project:key,..."` (preferred
+  for product apps) or configure the master `ANALYTICS_FEEDBACK_KEY` for a trusted
+  server-side caller; and
+- restart the service after deployment configuration changes.
+
+Submission is always deny-by-default. Feedback keys are independent from ingest and
+read keys, and a browser-shipped project key is only a bot hurdle. The server also
+applies a separate limit of 5 submission attempts per 10 minutes per IP by default.
+
+Submit the long-form JSON contract and wait for the result:
+
+```ts
+async function submitFeedback(category: string, feedback: string) {
+  const response = await fetch(`${ANALYTICS_URL}/feedback`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Feedback-Key': FEEDBACK_KEY,
+    },
+    body: JSON.stringify({ project: 'myproject', category, feedback }),
+  })
+  if (!response.ok) throw new Error(`feedback failed: ${response.status}`)
+  return response.json() as Promise<{ id: string; receivedAt: string }>
+}
+```
+
+Clear the form only after `201 Created`; on every failure retain its contents and show
+a retry action. A `201` means the complete row committed. Handle `400` as invalid input,
+`401` as an unknown key, `403` as a key for another project, `413` as a body over 10
+KiB, `429` using `Retry-After`, and `503` as unavailable Postgres. A disabled route
+returns `404`. Retries can create duplicates if the insert committed but the response
+was lost.
+
+Contract limits are 128 UTF-8 bytes for `category` and 8 KiB for `feedback`, both
+required after trimming. Do not add identity, email, IP, User-Agent, referrer, cookies,
+or browser metadata. Never log bodies or feedback values. A separate content-free
+`feedback_submitted` analytics counter may be emitted only after `201`.
+
+Verify with synthetic, non-personal text:
+
+```bash
+curl -i -X POST "$URL/feedback" \
+  -H "Content-Type: application/json" \
+  -H "X-Feedback-Key: $FEEDBACK_KEY" \
+  -d '{"project":"myproject","category":"smoke-test","feedback":"feedback route verification"}'
+# expect HTTP 201 with id + receivedAt
+```
+
+Then confirm the record in `/ui` using the read key. Operators can also use
+`GET /feedback?project=myproject`, `/feedback/download?project=myproject&format=csv`,
+and project-scoped `DELETE /feedback/{id}?project=myproject`. Product clients must not
+receive the read key or deletion capability. V1 has no automatic retention; manual
+deletion does not erase database backups or prior exports. Full privacy and operator
+contract: `~/projects/analytics/docs/FEEDBACK_SPEC.md`.
+
 ## What the service does and doesn't give you
 
 - ✅ Live gauges + window aggregates (`/stats`), hourly time series (`/series`,
@@ -145,5 +212,8 @@ Then verify from the real app flow, not just curl.
   and query recipes: `~/projects/analytics/docs/ARCHIVE_SPEC.md`. Best-effort — the
   hourly aggregates remain the durable totals — and dedup is NOT applied to the raw
   stream.
+- ✅ Durable user feedback: synchronous project-scoped Postgres records, protected
+  operator reads/downloads/deletion, and a dashboard Feedback view. This is separate
+  from analytics events and requires explicit server-side enablement.
 - ❌ Per-user profiles, retention cohorts, A/B stats — out of scope; compose dims or
   query the raw archive.

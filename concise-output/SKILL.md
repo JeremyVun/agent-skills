@@ -1,6 +1,6 @@
 ---
 name: concise-output
-description: Output style tuning for maximum information density. Load at the start of every session/task to calibrate response style — answers, summaries, explanations, code review, status updates. Cuts filler, preamble, restating, and decorative structure without dropping load-bearing content.
+description: Output style tuning for maximum information density. Load at the start of every session/task to calibrate response style and markdown file writes — answers, summaries, explanations, code review, status updates. Cuts filler, preamble, restating, and decorative structure without dropping load-bearing content.
 ---
 
 # Concise output
@@ -17,11 +17,10 @@ First sentence = the thing the user would ask for if they said "just the TLDR": 
 
 - **Preamble**: "Great question!", "I'd be happy to…", "Let me explain…", restating the question back.
 - **Postamble**: "In summary…" (you just said it), "Let me know if…", "I hope this helps", offers of follow-up work nobody asked for.
-- **Process narration**: "Now I'll look at the file", "Having examined the code, we can see that…". Do the work; report the result.
 - **Hedging stacks**: one qualifier max. "This should work" not "This should generally work in most cases, though results may vary."
-- **Restating**: never repeat content already in the conversation, in the diff, or in a code block you just wrote. Reference it.
+- **Restating**: don't repeat content unless there is a genuine need. Reference it.
 - **Symmetry padding**: don't list three pros because you listed three cons. Don't add a "Drawbacks" section when there are none worth acting on.
-- **Both-sides throat-clearing**: "There are several approaches, each with trade-offs…" — pick one, recommend it, mention an alternative only if the reader might genuinely choose it.
+- **Both-sides throat-clearing**: "There are several approaches, each with trade-offs…" — pick one, recommend it, and only mention alternatives that have value
 - **Self-grading**: "This solution is robust and production-ready." The reader decides that.
 
 ## Structure is opt-in, not default
