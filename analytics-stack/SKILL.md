@@ -155,14 +155,14 @@ applies a separate limit of 5 submission attempts per 10 minutes per IP by defau
 Submit the long-form JSON contract and wait for the result:
 
 ```ts
-async function submitFeedback(category: string, feedback: string) {
+async function submitFeedback(category: string, feedback: string, rating?: number) {
   const response = await fetch(`${ANALYTICS_URL}/feedback`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       'X-Feedback-Key': FEEDBACK_KEY,
     },
-    body: JSON.stringify({ project: 'myproject', category, feedback }),
+    body: JSON.stringify({ project: 'myproject', category, feedback, rating }),
   })
   if (!response.ok) throw new Error(`feedback failed: ${response.status}`)
   return response.json() as Promise<{ id: string; receivedAt: string }>
@@ -177,8 +177,9 @@ returns `404`. Retries can create duplicates if the insert committed but the res
 was lost.
 
 Contract limits are 128 UTF-8 bytes for `category` and 8 KiB for `feedback`, both
-required after trimming. Do not add identity, email, IP, User-Agent, referrer, cookies,
-or browser metadata. Never log bodies or feedback values. A separate content-free
+required after trimming. `rating` is optional; when present it must be an integer from
+1 to 5. Do not add identity, email, IP, User-Agent, referrer, cookies, or browser
+metadata. Never log bodies or feedback values. A separate content-free
 `feedback_submitted` analytics counter may be emitted only after `201`.
 
 Verify with synthetic, non-personal text:
