@@ -138,30 +138,30 @@ category text, or other personal data into `/e` or the raw archive. The feedback
 stores individual records synchronously in Postgres so operators can review, export,
 and delete them.
 
-Before wiring a product, collect the service URL, the same stable kebab-case project
-key, and its dedicated feedback submission key. The operator must:
+Before wiring a product, collect the service URL and the same stable kebab-case project
+key. A feedback submission key is optional. The operator must:
 
 - enable `ANALYTICS_FEEDBACK=1` with both `DATABASE_URL` and
   `ANALYTICS_READ_KEY` configured;
-- register a per-project key in `ANALYTICS_FEEDBACK_KEYS="project:key,..."` (preferred
-  for product apps) or configure the master `ANALYTICS_FEEDBACK_KEY` for a trusted
-  server-side caller; and
+- optionally register a per-project key in
+  `ANALYTICS_FEEDBACK_KEYS="project:key,..."` or configure the master
+  `ANALYTICS_FEEDBACK_KEY` for a trusted server-side caller; and
 - restart the service after deployment configuration changes.
 
-Submission is always deny-by-default. Feedback keys are independent from ingest and
-read keys, and a browser-shipped project key is only a bot hurdle. The server also
-applies a separate limit of 5 submission attempts per 10 minutes per IP by default.
+With neither feedback-key setting configured, submission is open. Configuring either
+setting protects every submission; project keys then enforce tenant scope, while a
+browser-shipped key remains only a bot hurdle. The server always applies a separate
+limit of 5 submission attempts per 10 minutes per IP by default.
 
 Submit the long-form JSON contract and wait for the result:
 
 ```ts
 async function submitFeedback(category: string, feedback: string, rating?: number) {
+  const headers: Record<string, string> = { 'Content-Type': 'application/json' }
+  if (FEEDBACK_KEY) headers['X-Feedback-Key'] = FEEDBACK_KEY
   const response = await fetch(`${ANALYTICS_URL}/feedback`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-Feedback-Key': FEEDBACK_KEY,
-    },
+    headers,
     body: JSON.stringify({ project: 'myproject', category, feedback, rating }),
   })
   if (!response.ok) throw new Error(`feedback failed: ${response.status}`)
@@ -171,7 +171,7 @@ async function submitFeedback(category: string, feedback: string, rating?: numbe
 
 Clear the form only after `201 Created`; on every failure retain its contents and show
 a retry action. A `201` means the complete row committed. Handle `400` as invalid input,
-`401` as an unknown key, `403` as a key for another project, `413` as a body over 10
+`401`/`403` as key errors when submission auth is configured, `413` as a body over 10
 KiB, `429` using `Retry-After`, and `503` as unavailable Postgres. A disabled route
 returns `404`. Retries can create duplicates if the insert committed but the response
 was lost.
@@ -187,10 +187,11 @@ Verify with synthetic, non-personal text:
 ```bash
 curl -i -X POST "$URL/feedback" \
   -H "Content-Type: application/json" \
-  -H "X-Feedback-Key: $FEEDBACK_KEY" \
   -d '{"project":"myproject","category":"smoke-test","feedback":"feedback route verification"}'
 # expect HTTP 201 with id + receivedAt
 ```
+
+Add `-H "X-Feedback-Key: $FEEDBACK_KEY"` only when submission auth is configured.
 
 Then confirm the record in `/ui` using the read key. Operators can also use
 `GET /feedback?project=myproject`, `/feedback/download?project=myproject&format=csv`,
