@@ -9,8 +9,8 @@ All skills live in one repository so they can be installed anywhere:
 
     /Users/jeremy/projects/agent-skills/<skill-name>/SKILL.md
 
-Never create a skill directly under `~/.claude/skills/`, `~/.agents/skills/`
-or inside a project.
+Never create a skill directly under `~/.claude/skills/`, `~/.codex/skills/`,
+`~/.agents/skills/` or inside a project.
 
 ## Create or edit
 
@@ -21,6 +21,8 @@ or inside a project.
 2. On this machine, expose it with a symlink into the checkout so edits land
    in git, never in an installed copy:
    `ln -s ../../projects/agent-skills/<skill-name> ~/.claude/skills/<skill-name>`
+   and
+   `ln -s ../../projects/agent-skills/<skill-name> ~/.codex/skills/<skill-name>`
 3. Commit and push from `/Users/jeremy/projects/agent-skills`, staging only
    the skill's own directory.
 
@@ -28,12 +30,13 @@ or inside a project.
 
 The `skills` CLI scans the repo for every `SKILL.md`, so no list is needed:
 
-    npx skills add JeremyVun/agent-skills --all
+    npx skills add JeremyVun/agent-skills --all -g
 
-Scoped to Claude Code, user-level, no prompts:
+Scoped to Claude Code and Codex, user-level, no prompts:
 
-    npx skills add JeremyVun/agent-skills --skill '*' -a claude-code -g -y
+    npx skills add JeremyVun/agent-skills --skill '*' -a claude-code codex -g -y
 
 One skill: `--skill <skill-name>`. Installed skills are copies under
-`~/.agents/skills/` with symlinks from `~/.claude/skills/`; rerun the command
-to update them, and do not edit them in place.
+`~/.agents/skills/` with symlinks from `~/.claude/skills/` and
+`~/.codex/skills/`; rerun the command to update them, and do not edit them in
+place.
