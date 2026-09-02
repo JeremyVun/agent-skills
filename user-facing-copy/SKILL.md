@@ -1,6 +1,6 @@
 ---
 name: user-facing-copy
-description: Rules for any text a user reads in a product: UI labels, buttons, error messages, empty states, onboarding, notifications, marketing, game narration. Use before drafting or reviewing copy, and when an owner says copy reads awkward, robotic, corny, confusing, or full of made-up words.
+description: "Rules for any text a user reads in a product: UI labels, buttons, error messages, empty states, onboarding, notifications, marketing, game narration. Use before drafting or reviewing copy, and when an owner says copy reads awkward, robotic, corny, confusing, or full of made-up words."
 ---
 
 # Writing user-facing copy
