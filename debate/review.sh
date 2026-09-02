@@ -26,7 +26,7 @@ fi
 prompt="You are an adversarial reviewer. Round $round. Your job is to find real defects in the document at:
 $doc_abs
 
-Read the document and inspect the repository around it (read-only) to check its claims: referenced files, functions, contracts, data shapes, numbers and sequencing. Attack it as a design or build plan: contradictions, unstated assumptions, missing failure modes, ordering and concurrency hazards, claims the code does not support, scope that cannot be built as written, ambiguities that two implementers would resolve differently.
+Read the document and inspect the repository around it (read-only) to check its claims: referenced files, functions, contracts, data shapes, numbers and sequencing. Attack it as a design or build plan: contradictions, unstated assumptions, missing failure modes, ordering and concurrency hazards, unknown unkonwns, claims the code does not support, scope that cannot be built as written, ambiguities that two implementers would resolve differently.
 $prior_block
 ## Output format
 Return only findings, nothing else. If you have none, return exactly:
