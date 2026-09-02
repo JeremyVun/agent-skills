@@ -44,7 +44,7 @@ Severity guide. HIGH: the item cannot be built or would be built wrong. MEDIUM: 
 Do not pad. Style, formatting and tone are not findings unless they cause ambiguity. Do not restate the document."
 
 codex exec -C "$repo" -m "$model" -s read-only --skip-git-repo-check --ephemeral \
-  -o "$out" "$prompt" >/dev/null 2>"$out.err" || { cat "$out.err" >&2; exit 1; }
+  -o "$out" "$prompt" </dev/null >/dev/null 2>"$out.err" || { cat "$out.err" >&2; exit 1; }
 
 cat "$out"
 echo
