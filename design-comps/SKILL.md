@@ -25,8 +25,8 @@ the design is closed when the owner says so, not when a comp looks good.
   depends on their client. On a desktop CLI, an image read into the chat is
   seen by the model only: open the contact sheet in their browser (or a shot
   in the OS image viewer). On a mobile chat client, opening reaches nothing:
-  the owner sees only what the agent reads into the conversation. Establish
-  which client before asking; ASCII and prose are never comps.
+  the owner sees only what the agent reads into the conversation. Assume
+  desktop unless told otherwise; ASCII and prose are never comps.
 
 ## Project inputs
 
