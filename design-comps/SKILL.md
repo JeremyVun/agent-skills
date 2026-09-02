@@ -14,7 +14,7 @@ closed when the owner says so, not when a comp looks good.
 
 ## Golden rules
 
-1. **Comps are made by a top-taste (Opus-class) agent, never by the
+1. **Comps are made by a top-taste (Opus-class) agent on xhigh effort, never by the
    orchestrator.** The owner judges agent-taste iteration; orchestrator-made
    comps get refused. The comp agent gets intent, instruments and creative
    latitude, never dictated geometry, and must look at every shot and iterate
