@@ -21,8 +21,12 @@ the design is closed when the owner says so, not when a comp looks good.
   and creative latitude, never dictated geometry. It must LOOK at every shot
   and iterate at least once before reporting. A low-taste model given the
   same brief produces centred text and cards; the comps ARE the design.
-- **Owner** rules on pixels opened on their own screen. Reading a PNG into the
-  chat shows the owner nothing; ASCII and prose are not comps.
+- **Owner** rules on pixels that reach their screen, and which pixels do
+  depends on their client. On a desktop CLI, an image read into the chat is
+  seen by the model only: open the contact sheet in their browser (or a shot
+  in the OS image viewer). On a mobile chat client, opening reaches nothing:
+  the owner sees only what the agent reads into the conversation. Establish
+  which client before asking; ASCII and prose are never comps.
 
 ## Project inputs
 
@@ -73,8 +77,11 @@ brief restates them, and if one is missing, the first round establishes it:
    resampled. Where a decision lives in a few pixels, capture a clipped
    region at 4× from the live cascade rather than enlarging a PNG.
 6. **Build the contact sheet** (below) and **write OPTIONS.md** (below).
-7. **Verdict.** Open the sheet in the owner's browser, then ask the verdict
-   questions. Read the key shots yourself so you can discuss them. A verdict
+7. **Verdict.** Show the sheet through the owner's channel (open it in the
+   browser on desktop; on mobile, read the exemplar and each direction's
+   decisive frames into the chat at full resolution, in sheet order), then
+   ask the verdict questions. Read the key shots yourself either way so you
+   can discuss them. A verdict
    is often a synthesis, not a pick; the synthesised comp then becomes the
    calibration exemplar. Record the owner's words near-verbatim in the design
    doc immediately, as a dated round-N section: workshop path, sheet name,
