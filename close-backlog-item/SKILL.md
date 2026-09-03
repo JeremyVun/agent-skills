@@ -85,12 +85,7 @@ explicit close request also authorizes cleanup of stale or inactive dirty
 worktrees that are demonstrably attributable to that backlog item.
 
 For every candidate, record its absolute path, branch, HEAD, status, untracked
-files, and commits not reachable from the destination branch. "Merged" needs
-four checks, not one: `git merge-base --is-ancestor` plus `git cherry` (re-landed
-work shows as unmerged but is marked equivalent), a clean `status --porcelain`,
-no `locked` flag in `git worktree list`, and `lsof -a -d cwd` showing no process
-still running inside it; the last check has caught a live agent the other three
-cleared. Establish the
+files, and commits not reachable from the destination branch. Establish the
 connection from the branch, path, commits, or contents; a suggestive name alone
 is not enough. Check for an active process or session before changing it.
 
@@ -100,8 +95,7 @@ may be discarded under the explicit close authority. If ownership is
 uncertain, the worktree is active, or unique current work cannot safely be
 landed, stop and report the exact blocker instead of force-removing it.
 
-Remove only the resolved worktree path, with `git worktree remove`, never `rm -rf`
-(which leaves stale admin entries). Use force only after the preceding
+Remove only the resolved worktree path. Use force only after the preceding
 inspection proves every remaining change is obsolete and in scope. Delete an
 associated local branch only when it is clearly item-specific and has no
 current unmerged work. Preview stale administrative entries before pruning

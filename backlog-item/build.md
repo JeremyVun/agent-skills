@@ -86,10 +86,7 @@ a checklist. Each exists because it once cost a round.
   proves impossible. Numbers the owner edits in an answer are the binding
   spec; put the constraining arithmetic in the brief.
 - "Keep the artifact, tweak A and B" is a PORT: same algorithm, same output,
-  only the named tweaks. Pin a rendered baseline taken from the artifact
-  itself (frames, pixels, timings) and prove the rest unchanged by diff
-  against it; an implementation quirk he saw is part of what he picked, and
-  any adjective the orchestrator adds to the brief is a redesign. When a misread ships, amend the design doc
+  only the named tweaks. When a misread ships, amend the design doc
   immediately; two agents making the same mistake means fix the doc, not
   the next prompt. Don't redirect an agent deep in its budget onto a
   different spec; stop it and start fresh.
