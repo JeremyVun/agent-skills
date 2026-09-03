@@ -2,11 +2,25 @@
 
 Start by reading the folder and the contracts it cites, then summarise the
 feature to be built back to the owner in plain language before touching
-anything. The doc is the spec; if it is silent or contradictory on something
-the build needs, ask the owner and fold the answer into the doc first.
+anything.
 
-Orchestrate to completion: every phase built, verified, and marked done in
-`build_plan.md`. Then offer the `close-backlog-item` skill.
+The plan is a direction known in more detail, not a script. The build is
+iterative where it needs to be and straight-through where it is clear-cut,
+and telling those apart is the orchestrator's job. Things the plan did not
+know come up as phases land: a seam that does not exist as described, a
+number that does not survive contact with the code, a defect nobody saw, a
+cheaper mechanism found halfway. When one does, decide whether it is yours
+to resolve or the owner's, and ask the moment it is the owner's. The owner
+can be asked at any time, about anything, and prefers a question to a wrong
+build. Fold each answer, and each plan change you make on your own
+authority, into the doc before briefing the next agent.
+
+Run to completion: every phase built, verified, marked done in
+`build_plan.md`, the design doc still true of what shipped. Then offer the
+`close-backlog-item` skill.
+
+The sections below are the accumulated traps of running this workflow, not
+a checklist. Each exists because it once cost a round.
 
 ## Subagents
 
@@ -105,16 +119,17 @@ Orchestrate to completion: every phase built, verified, and marked done in
 
 ## Verification discipline
 
-- Verify the harness before believing a red. Rerun once with the tool's own
-  documented invocation before spawning a fix agent. Stale lint caches and
-  pruned worktrees produce convincing false reds.
-- A verify loop is only as good as its instrument. Confirm it can display
-  the failure class being risked, require one shot from the real client per
-  defect, and fix the instrument rather than the next prompt's vigilance.
-- Live-probe verification ranks equal with tests; the worst bugs are
-  invisible to green suites. Prove each new regression test bites by
-  temporarily breaking the guard. Behaviour-preserving splits need verbatim
-  moves plus a line-multiset diff. A race-detector gate is a deliverable
-  whenever concurrency boundaries move.
+- A green suite proves less than it looks. The worst bugs are invisible to
+  tests, so live probes of the real artifact rank equal with them, and
+  each new regression test is proven to bite by breaking its guard once.
+- A verify loop is only as good as its instrument. Make sure it can show
+  the failure class being risked, and fix the instrument rather than
+  trusting the next prompt's vigilance.
+- Verify the harness before believing a red. Stale lint caches and pruned
+  worktrees produce convincing false reds; rerun once with the tool's own
+  documented invocation before spawning a fix agent.
+- Some gates are the deliverable: a race-detector run whenever concurrency
+  boundaries move, a verbatim move plus a line-multiset diff for a
+  behaviour-preserving split.
 - Report outcomes faithfully to the owner: failing gates with their output,
   skipped steps named as skipped, done only when verified.
