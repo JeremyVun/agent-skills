@@ -51,6 +51,10 @@ verifiable and sized so no agent approaches its context ceiling.
 - Numbers the owner edits in an answer are the binding spec; record them
   verbatim.
 - Ask the owner whenever a reading is uncertain. Aligned beats fast.
+- Contracts record as-built law only. A "when X lands, do Y" note, however
+  small, goes in the backlog item, never a contract.
+- Closing a finished item is standing practice, not a question to raise:
+  migrate what is durable, delete the folder, and say it is done.
 - The build stage runs in a fresh context. If design finished in this
   session, say so and tell the owner to clear and run the build stage anew
   rather than orchestrating on a context full of design discussion.

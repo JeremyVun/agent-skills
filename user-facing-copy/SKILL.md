@@ -93,6 +93,9 @@ onboarding, help.
   default is sentence case, full stops on sentences, none on labels.
 - World voice belongs in narration and events, never in a form label or a
   refusal. A player reads a label mid-task and needs the standard word.
+- Short is not the same as done. Trimming a helper line to its load-bearing
+  fact produces a patch note ("A level is recorded and confers nothing yet").
+  The survivor of a cut must still carry the fact in the product's own voice.
 
 ## Narrative copy
 
@@ -217,3 +220,7 @@ bitten twice.
   tic fixes were rejected as context-free substitutions, two of which
   committed the tic they replaced. Promoted: a fix recovers the meaning
   underneath, never swaps in a new phrase.
+- 2026-09-03: folded from project memory: the trimming trap (a cut that
+  keeps the mechanic's half and drops the voice), and the owner's diagnosis
+  that token-efficient copy reads as machine copy. Promoted to functional
+  copy and already present in rule one.

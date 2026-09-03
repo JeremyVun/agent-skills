@@ -45,7 +45,42 @@ out, a recommendation, and the mechanism explained from zero: what the
 machinery is and whether it earns its keep, as if to a friend who has not
 read the doc. Do not batch a session's worth of decisions into one wall;
 ask at the point the decision blocks the next thought. Fold each answer
-into the doc before moving on.
+into the doc before moving on. The owner's free-text note on an answer is
+itself the ruling; record it verbatim.
+
+Practices that have each cost a round when skipped:
+
+- **No repo jargon in a question.** Any internal term the question leans on
+  is defined in plain words in the same message, including the project's own
+  generator and fairness internals; the owner does not carry them in his
+  head even when he once ruled on them.
+- **Pictures go on his screen.** An image read into the conversation is
+  invisible to him. For any visual verdict, build one curated sheet (shots,
+  captions, numbers, honest counterarguments, the questions inline) and open
+  it on his display before asking.
+- **Photograph before claiming.** Before asserting what a route or framing
+  shows, shoot that exact route at his framing and look. A header or doc is
+  a hypothesis until a shot confirms it; a confident wrong claim about what
+  he can see reads as a lie.
+- **"Feel like X" means X's form.** A named referent (a council chamber, a
+  real place) is a statement about spatial composition and affordances, not
+  mood. Confirm with reference images before running a round on it.
+- **Close calls become two arms, not an argument.** When two treatments of
+  one design are both defensible, build both behind a flag with a deadline
+  and hand him the two commands; the loser's code is deleted when he picks.
+  This never licenses building two different concepts.
+- **Dials carry his names, anchors and zero-cases.** He validates a
+  parameterisation by its degenerate cases. An equivalent-looking mechanism
+  with different anchors fails those tests even when one setting matches.
+  Ask before substituting a "better" model.
+- **Scale calls: derive the ladder, he picks the rung.** Show the arithmetic
+  and the physical thresholds at each size; expect the bolder pick and never
+  pre-choose the restrained option. A timid derivation usually means the
+  wrong anchoring constraint. Build the pick as a one-line knob so the
+  dial-back he asks for later is cheap.
+- **A bare tool run produces everything.** Before adding a mode flag, ask
+  whether the bare invocation can emit the new artifact as well; flags only
+  narrow.
 
 ## Write the plan
 
