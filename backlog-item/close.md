@@ -1,9 +1,4 @@
----
-name: close-backlog-item
-description: Review or close completed ephemeral backlog folders by migrating durable contracts and assets, repairing references, cleaning item-specific worktrees, and deleting obsolete history. Use for closure audits or explicitly authorized close-and-delete tasks, not active work.
----
-
-# Close Backlog Item
+# Close stage
 
 Backlog folders and their worktrees are disposable workspaces. A completed
 item leaves current behavior in the product, its canonical contracts, and the

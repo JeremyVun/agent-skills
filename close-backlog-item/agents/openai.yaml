@@ -1,4 +1,0 @@
-interface:
-  display_name: "Close Backlog Item"
-  short_description: "Close completed backlog work into contracts"
-  default_prompt: "Use $close-backlog-item to close and delete this completed backlog item safely."

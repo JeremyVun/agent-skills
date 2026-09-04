@@ -17,7 +17,7 @@ authority, into the doc before briefing the next agent.
 
 Run to completion: every phase built, verified, marked done in
 `build_plan.md`, the design doc still true of what shipped. Then offer the
-`close-backlog-item` skill.
+close stage of this skill.
 
 The sections below are the accumulated traps of running this workflow, not
 a checklist. Each exists because it once cost a round.

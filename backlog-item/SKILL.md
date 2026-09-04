@@ -27,7 +27,7 @@ candidate remains, ask. With no stage, read the folder:
 | --- | --- |
 | no `build_plan.md`, or one whose phases are not yet ready to execute | design → read [design.md](design.md) |
 | `build_plan.md` with phases not yet marked done | build → read [build.md](build.md) |
-| every phase marked done | close → invoke `close-backlog-item` |
+| every phase marked done | close → read [close.md](close.md) |
 
 Read only the file for the current stage. An explicit stage argument
 overrides detection (reopening design on a planned item is common).
