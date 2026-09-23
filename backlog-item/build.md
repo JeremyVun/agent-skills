@@ -26,14 +26,14 @@ a checklist. Each exists because it once cost a round.
 
 - Only spawn a subagent when the work genuinely splits into isolated pieces,
   and give each one a real scope, not a fragment.
-- Every subagent is Opus 5, passed explicitly; never rely on the default.
+- Every subagent is the latest Opus, passed explicitly; never rely on the default.
   Never use Haiku or Sonnet.
 - Effort is high by default. Use xhigh for open-ended debugging,
   multi-constraint design, or anything where a wrong first pass means a
   rerun; use high for well-specified implementation with a written contract
   and a verify loop.
-- FABLE 5 SUB AGENTS ARE FORBIDDEN UNLESS THE OWNER HAS EXPLICITLY GRANTED
-  PERMISSION. Standing exception: one Fable 5 adversarial reviewer between
+- FABLE SUB AGENTS ARE FORBIDDEN UNLESS THE OWNER HAS EXPLICITLY GRANTED
+  PERMISSION. Standing exception: one Fable adversarial reviewer between
   the build and fix waves where approval is granted.
   - It attacks the round's named invariants in its own worktree and flags
     contract contradictions for an owner RULING rather than fixing them.
@@ -43,12 +43,12 @@ a checklist. Each exists because it once cost a round.
     them as permanent regressions, with at least one real-stack (wire/DB)
     probe per defect; hand-composed unit probes can model propagation the
     code doesn't have.
-  - Opus 5 xhigh is the fallback when Fable is cut off, briefed with which
+  - The latest Opus at xhigh is the fallback when Fable is cut off, briefed with which
     probes passed, which are real defects and which failed on their own
     fixture.
 - Every subagent brief carries the owner's comment rule verbatim: comments
   are rare and short, one line of *why* where the reason is non-obvious,
-  never narrating what the code does. Opus 5 defaults to verbose comments
+  never narrating what the code does. Opus defaults to verbose comments
   and cleaning them up costs a second pass.
 
 ## Sizing and sequencing briefs
