@@ -21,8 +21,9 @@ Never create a skill directly under `~/.claude/skills/`, `~/.codex/skills/`,
 2. On this machine, expose it with a symlink into the checkout so edits land
    in git, never in an installed copy:
    `ln -s ../../projects/agent-skills/<skill-name> ~/.claude/skills/<skill-name>`
-   and
-   `ln -s ../../projects/agent-skills/<skill-name> ~/.codex/skills/<skill-name>`
+   and, for Codex,
+   `ln -s ../../projects/agent-skills/<skill-name> ~/.agents/skills/<skill-name>`.
+   Do not run `npx skills add` here: it replaces these links with copies.
 3. Commit and push from `/Users/jeremy/projects/agent-skills`, staging only
    the skill's own directory.
 
