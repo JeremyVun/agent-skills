@@ -67,7 +67,11 @@ restates them, and a first round establishes any that are missing:
    S/M/L, one honest "why this might be wrong" line, and a passes log of what
    each iteration fixed. Frozen things stay frozen; iterate composition only.
    A concept that can only meet the spec by breaking a binding rule presents
-   that as an owner call, never absorbs it.
+   that as an owner call, never absorbs it. When the owner's steer already
+   describes a concrete layout, draw that one layout at its plain reading and
+   diverge only on what it leaves open (2026-09-24: three inventive answers to
+   "sidebar, a collapsible list, then the email" were refused as
+   overcomplicating a simple ask).
 5. **Shoot every concept at every frame, scheme and scenario.**
    Full-resolution 2× PNGs, never resampled; decisions that live in a few
    pixels get a 4× clip from the live cascade.
