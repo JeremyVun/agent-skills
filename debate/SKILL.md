@@ -1,6 +1,6 @@
 ---
 name: debate
-description: Adversarially review a backlog design.md or build_plan.md with an external model (Codex, GPT 5.6 sol) over several rounds, then triage, verify and fix the surviving findings. Use when the owner types /debate [doc] [rounds] or asks for a design doc to be stress-tested before building.
+description: Adversarially review a backlog design.md or build_plan.md with an external model (Codex, GPT 6 astra) over several rounds, then triage, verify and fix the surviving findings. Use when the owner types /debate [doc] [rounds] or asks for a design doc to be stress-tested before building.
 ---
 
 # Debate

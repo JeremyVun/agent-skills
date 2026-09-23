@@ -169,6 +169,10 @@ These go verbatim into the comp agent's brief.
   thing being designed) and build every concept from house parts; a new
   screen is an existing idiom promoted. With no language to borrow,
   establishing one exemplar IS the exploration.
+- **A probe threshold is a report, not a brief.** An agent handed gate windows
+  searches inside them and returns near-identical directions (2026-09-11: six
+  blues, refused). Diverge for a human at full frame first, then measure; a
+  direction that trips a gate is shown with the cost of changing the gate.
 - **Measure before a concept depends on a perceptual property**: items above
   the fold per frame, every colour against every ground in every scheme, the
   widest string against its track, geometric truth of anything claiming to be

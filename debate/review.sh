@@ -6,7 +6,7 @@ set -euo pipefail
 doc="$1"
 round="$2"
 prior="${3:-}"
-model="${DEBATE_MODEL:-gpt-5.6-sol}"
+model="${DEBATE_MODEL:-gpt-6-astra}"
 
 [ -f "$doc" ] || { echo "no such doc: $doc" >&2; exit 2; }
 doc_abs="$(cd "$(dirname "$doc")" && pwd)/$(basename "$doc")"
