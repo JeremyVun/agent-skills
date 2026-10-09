@@ -1,11 +1,11 @@
 ---
 name: project-docs
-description: Set up or maintain a project's docs layout, durable assets, shared tools, and concise index-style CLAUDE.md. Use when creating a project, adding a feature design, recording reference material, or repairing drift from this structure.
+description: Set up or maintain a project's docs layout, durable assets, shared tools, and concise index-style AGENTS.md. Use when creating a project, adding a feature design, recording reference material, or repairing drift from this structure.
 ---
 
 # Project docs layout
 
-Every project keeps its documentation in a root-level `docs/` folder, durable media in a root-level `assets/` folder, agent tooling in a root-level `tools/` folder, and a concise `CLAUDE.md` index at the repo root. Create only what the project actually needs — empty placeholder files and folders are drift, not structure.
+Every project keeps its documentation in a root-level `docs/` folder, durable media in a root-level `assets/` folder, agent tooling in a root-level `tools/` folder, and a concise `AGENTS.md` index at the repo root. Create only what the project actually needs — empty placeholder files and folders are drift, not structure.
 
 ```
 docs/
@@ -17,7 +17,7 @@ docs/
   references/           # external reference material, token-dense
 assets/                 # durable images, video, audio, and other media
 tools/                  # scripts agents build & share; verify, iterate, review UX
-CLAUDE.md               # concise operational index at repo root
+AGENTS.md               # concise operational index at repo root
 ```
 
 ## Root bridging docs (`docs/*.md`)
@@ -38,8 +38,8 @@ Durable non-code media used by the product, documentation, tests, or calibration
 ## `tools/`
 All scripts and tooling created by agents working on the project, kept so they can be shared and reused across sessions. Agents are encouraged to build tools to verify findings, iterate, and review usability — user-experience quality is make or break, so drive the real artifact, don't just run tests. Give each tool a usage comment/header at the top; a `tools/README.md` one-liner index helps once there are more than a few.
 
-## CLAUDE.md
-Very concise: operational and orientation information only — the project structure, commands to build/run/test, and where to find things (pointers into `docs/`, `assets/`, and `tools/`). It is an index, not a manual: if content is more than a couple of lines, it belongs in `docs/` with a pointer here. No narrative, no duplicated doc content.
+## AGENTS.md
+A real file, read natively by Claude Code and Codex. Do not add a `CLAUDE.md` beside it: a real one (or a `CLAUDE.local.md`) makes Claude Code skip `AGENTS.md`, and a symlink is redundant. When repairing a project that has a `CLAUDE.md`, fold its content into `AGENTS.md` and delete it. Very concise: operational and orientation information only — the project structure, commands to build/run/test, and where to find things (pointers into `docs/`, `assets/`, and `tools/`). It is an index, not a manual: if content is more than a couple of lines, it belongs in `docs/` with a pointer here. No narrative, no duplicated doc content.
 
 ## Maintaining
-When asked to "set up docs", create the skeleton above (only applicable parts) and populate `project.md` and `CLAUDE.md` immediately. When working on any project that follows this layout: keep contracts in sync with interface changes, preserve durable media in `assets/`, add references when you fetch external material worth keeping, and put reusable scripts in `tools/`. Disposable generated output belongs in the system temporary directory, not `assets/` or an ad-hoc repository location.
+When asked to "set up docs", create the skeleton above (only applicable parts) and populate `project.md` and `AGENTS.md` immediately. When working on any project that follows this layout: keep contracts in sync with interface changes, preserve durable media in `assets/`, add references when you fetch external material worth keeping, and put reusable scripts in `tools/`. Disposable generated output belongs in the system temporary directory, not `assets/` or an ad-hoc repository location.
