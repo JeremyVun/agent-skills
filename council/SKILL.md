@@ -21,13 +21,13 @@ was written and what reaches the screen. Scores show the trend across rounds.
    story beat for yourself; never give it to the reviewers.
 2. **Review.** Run from this skill's directory:
 
-       python3 <skill-dir>/council.py <frames-dir> <out-dir> --game "<Name>" [--fps 1] [--note "<text>"] [--previous <file>]
+       python3 <skill-dir>/council.py <frames-dir> <out-dir> --game "<Name>" [--fps 1] [--note "<text>"] [--previous <earlier-round-dir>]
 
    It tiles the frames into timestamped sheets (`<out-dir>/sheets/`) and runs both reviewers in parallel, writing
    `opus.md` and `sol.md`. `--note` adds what any player would know about the screen, such as "The small ring is your
    mouse cursor, and the faint line behind it is where you moved it during the last second." `--previous` chains
-   sections: pass the earlier round's "What happened" text so a later section is not judged cold. It takes several
-   minutes, so run it in the background and wait for it.
+   sections: given the earlier round's folder, each reviewer gets its own "What happened" from there, so a later
+   section is not judged cold. It takes several minutes, so run it in the background and wait for it.
 3. **Findings.** Read both reviews in full, then the section's design docs. Write `<out-dir>/findings.md`:
    - the scores side by side;
    - where their narration departs from the design, most important first, saying which reviewer saw it, with

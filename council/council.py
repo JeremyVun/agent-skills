@@ -2,8 +2,9 @@
 """One council round: tiles a game's frames into timestamped contact sheets and has Opus and Sol each review them
 blind, as players who know only the game's name.
 
-Usage: council.py <frames-dir> <out-dir> --game NAME [--fps 1] [--note TEXT] [--previous FILE] [--only opus|sol]
-Frames are the images in <frames-dir> in name order, taken at a constant --fps of game time.
+Usage: council.py <frames-dir> <out-dir> --game NAME [--fps 1] [--note TEXT] [--previous ROUND-DIR] [--only opus|sol]
+Frames are the images in <frames-dir> in name order, taken at a constant --fps of game time. --previous chains from an
+earlier round: each reviewer gets the "What happened" section of its own review there.
 """
 import argparse
 import concurrent.futures
@@ -71,9 +72,17 @@ print(f'{len(frames)} frames on {len(sheets)} sheets in {out / "sheets"}')
 
 every = 'one frame for every second' if a.fps == 1 else f'{a.fps:g} frames for every second'
 brief = (HERE / 'brief.md').read_text().format(game=a.game, every=every, note=a.note.strip())
-if a.previous:
-    brief = (f'Before this you played an earlier part of {a.game}. Your own account of it:\n\n'
-             f'<earlier>\n{pathlib.Path(a.previous).read_text().strip()}\n</earlier>\n\n{brief}')
+
+
+def chained(name):
+    if not a.previous:
+        return brief
+    review = (pathlib.Path(a.previous) / f'{name}.md').read_text()
+    story = review.split('## What happened', 1)[1].split('\n## ', 1)[0].strip()
+    return (f'Before this you played an earlier part of {a.game}. Your own account of what happened then:\n\n'
+            f'<earlier>\n{story}\n</earlier>\n\n{brief}')
+
+
 listing = f'The contact sheets, in order: {", ".join(sheets)}.'
 player = (HERE / 'player.md').read_text()
 
@@ -94,7 +103,7 @@ def run(command):
 def opus():
     return run(['claude', '-p', '--model', OPUS, '--effort', EFFORT, '--system-prompt', player,
                 '--setting-sources', 'project', '--tools', 'Read', '--allowedTools', 'Read', '--output-format', 'text',
-                f'{brief}\n{listing} They are image files in the current folder; read each one.'])
+                f'{chained("opus")}\n{listing} They are image files in the current folder; read each one.'])
 
 
 def sol():
@@ -102,7 +111,7 @@ def sol():
     run(['codex', 'exec', '--skip-git-repo-check', '--ephemeral', '-m', SOL, '-c', f'model_reasoning_effort={EFFORT}',
          '-c', f'model_instructions_file={blind / ".player.md"}', '-s', 'read-only', '-C', str(blind),
          *[f'--image={blind / name}' for name in sheets], '--output-last-message', str(answer),
-         '--', f'{brief}\n{listing} They are attached as images in that order.'])
+         '--', f'{chained("sol")}\n{listing} They are attached as images in that order.'])
     return answer.read_text()
 
 
