@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>__TITLE__: playtest guide</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root {
+    --paper: #f6f1e7; --card: #fffdf8; --ink: #2a2622; --soft: #6f665c; --line: #e0d6c4;
+    --red: #b5362c; --green: #4c7a3f; --amber: #b07a16; --blue: #3c6a8c; --shade: #efe7d8; --yes: #2f6b5a;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: 16px; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 15px/1.5 -apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif; }
+  a { color: var(--red); }
+  code { font: 12.5px/1.4 ui-monospace, Menlo, monospace; background: var(--shade); padding: 1px 5px; border-radius: 4px; }
+  .layout { display: grid; grid-template-columns: 250px minmax(0, 1fr); max-width: 1500px; margin: 0 auto; }
+  nav { position: sticky; top: 0; align-self: start; height: 100vh; overflow-y: auto; padding: 22px 16px; border-right: 1px solid var(--line); }
+  nav h1 { font-size: 17px; margin: 0 0 2px; }
+  nav .sub { color: var(--soft); font-size: 12.5px; margin-bottom: 14px; }
+  nav a.room { display: flex; justify-content: space-between; gap: 8px; padding: 5px 8px; border-radius: 6px; color: var(--ink); text-decoration: none; font-size: 13.5px; }
+  nav a.room:hover { background: var(--shade); }
+  nav a.room .count { color: var(--soft); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  nav a.room .count.done { color: var(--green); font-weight: 600; }
+  .tally { margin: 14px 0; padding: 10px; background: var(--card); border: 1px solid var(--line); border-radius: 8px; font-size: 13px; }
+  .tally b { font-variant-numeric: tabular-nums; }
+  .tally .bar { height: 6px; background: var(--shade); border-radius: 3px; overflow: hidden; margin-top: 8px; display: flex; }
+  .tally .bar i { display: block; height: 100%; }
+  nav label { display: block; font-size: 12px; color: var(--soft); margin-top: 12px; }
+  nav input[type=text] { width: 100%; font: 12.5px ui-monospace, Menlo, monospace; padding: 5px 6px; border: 1px solid var(--line); border-radius: 5px; background: var(--card); }
+  button { font: inherit; cursor: pointer; border: 1px solid var(--line); background: var(--card); border-radius: 6px; padding: 6px 10px; color: var(--ink); }
+  button:hover { border-color: var(--soft); }
+  nav button { width: 100%; margin-top: 8px; font-size: 13px; }
+  main { padding: 26px 34px 120px; min-width: 0; }
+  h2 { font-size: 24px; margin: 46px 0 4px; padding-top: 10px; border-top: 2px solid var(--ink); }
+  h2 small { font-size: 13px; font-weight: 400; color: var(--soft); margin-left: 8px; }
+  .intro { max-width: 860px; }
+  .intro h1 { font-size: 30px; margin: 0 0 6px; }
+  .intro li { margin: 4px 0; }
+  .roomlead { color: var(--soft); max-width: 860px; margin: 2px 0 12px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-left: 5px solid var(--line); border-radius: 10px; padding: 16px 18px; margin: 14px 0; }
+  .card.awaiting { background: #eef5f1; border: 2px solid var(--yes); border-left-width: 8px; }
+  .card.approve { border-left-color: var(--green); }
+  .card.change { border-left-color: var(--amber); }
+  .card.drop { border-left-color: var(--red); }
+  .card header { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 12px; }
+  .card .n { font-weight: 700; color: var(--soft); font-variant-numeric: tabular-nums; }
+  .card h3 { font-size: 18px; margin: 0; }
+  .chip { font-size: 11.5px; color: var(--soft); border: 1px solid var(--line); border-radius: 20px; padding: 1px 8px; white-space: nowrap; }
+  .chip.audio { color: var(--blue); border-color: var(--blue); }
+  .chip.unseen { color: var(--amber); border-color: var(--amber); }
+  .chip.yes { color: #fff; background: var(--yes); border-color: var(--yes); font-weight: 600; }
+  .starts { margin: 10px 0 2px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .starts a { font-size: 13px; text-decoration: none; background: var(--red); color: #fff; padding: 3px 10px; border-radius: 6px; }
+  .starts a.preview { background: var(--yes); }
+  .starts a:hover { filter: brightness(1.1); }
+  .starts span { font-size: 12.5px; color: var(--soft); }
+  .row { display: grid; grid-template-columns: 92px minmax(0, 1fr); gap: 4px 12px; margin-top: 8px; max-width: 980px; }
+  .row dt { font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: var(--soft); padding-top: 3px; }
+  .row dd { margin: 0; }
+  .row dd ul { margin: 0; padding-left: 18px; }
+  .row dd li { margin: 2px 0; }
+  .stage dd { background: #fbefd3; border-radius: 6px; padding: 5px 9px; }
+  .judge dd { background: #f4e6e3; border-radius: 6px; padding: 5px 9px; }
+  .said dd { font-style: italic; color: #4a443d; }
+  .pairs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+  .pairs.one { grid-template-columns: 1fr; }
+  figure { margin: 0; }
+  figure img { width: 100%; display: block; border-radius: 6px; border: 1px solid var(--line); background: #ddd; }
+  figcaption { font-size: 12px; color: var(--soft); margin-top: 3px; }
+  figcaption b { color: var(--ink); }
+  .clips { margin-top: 12px; display: grid; gap: 8px; }
+  .clip { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px; align-items: end; }
+  .clip.single { grid-template-columns: minmax(0, 1fr); }
+  .clip .cap { grid-column: 1 / -1; font-size: 13px; }
+  .clip label { font-size: 12px; color: var(--soft); display: block; }
+  audio { width: 100%; height: 34px; }
+  .verdict { margin-top: 14px; padding-top: 12px; border-top: 1px dashed var(--line); display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .verdict button.on.approve { background: var(--green); color: #fff; border-color: var(--green); }
+  .verdict button.on.change { background: var(--amber); color: #fff; border-color: var(--amber); }
+  .verdict button.on.drop { background: var(--red); color: #fff; border-color: var(--red); }
+  .verdict input { flex: 1 1 320px; font: inherit; padding: 6px 9px; border: 1px solid var(--line); border-radius: 6px; background: #fff; }
+  .ref { margin: 10px 0; padding: 8px 14px; border: 1px dashed var(--line); border-radius: 8px; color: var(--soft); font-size: 14px; }
+  .ref a { font-weight: 600; }
+  .ideashead { margin: 26px 0 0; font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--soft); }
+  .card.idea { background: #f3f6f8; border-style: dashed; border-left-style: solid; }
+  .chip.kind { color: var(--ink); background: #fff; }
+  .take dd { background: #e4edf3; border-radius: 6px; padding: 5px 9px; }
+  #export { position: fixed; inset: 0; background: rgba(30, 26, 22, .5); display: none; align-items: center; justify-content: center; z-index: 5; }
+  #export.open { display: flex; }
+  #export div { background: var(--card); padding: 18px; border-radius: 10px; width: min(820px, 92vw); }
+  #export textarea { width: 100%; height: 50vh; font: 12.5px/1.45 ui-monospace, Menlo, monospace; }
+  @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } nav { position: static; height: auto; border-right: 0; } .pairs { grid-template-columns: 1fr; } }
+  .ear dd { background: #e4edf3; border-radius: 6px; padding: 5px 9px; }
+  .ear dd ul, .judge dd ul { margin: 0; padding-left: 18px; }
+  .links a { margin-right: 14px; white-space: nowrap; }
+</style>
+</head>
+<body>
+<div class="layout">
+<nav>
+  <h1>__TITLE__</h1>
+  <div class="sub" id="navsub"></div>
+  <div id="rooms"></div>
+  <div class="tally" id="tally"></div>
+  <label>Game address (<code>__HEAD__</code>)
+    <input type="text" id="base" spellcheck="false">
+  </label>
+  <button id="copy">Copy my verdicts</button>
+  <button id="unjudged">Jump to next unjudged</button>
+</nav>
+<main>
+<section class="intro">
+  <h1>Playthrough guide: __TITLE__</h1>
+  <p>__INTRO: what this round answers, in play order; how to mark Approve / Change / Drop; that the page remembers; press
+  Copy my verdicts and paste them back.__</p>
+  <ul>
+    <li><b>Simplest way through:</b> play __GAME_URL__ straight through with this page beside it. The red buttons jump to a
+      moment; they open in one game tab.</li>
+    <li><b>What nobody has seen or heard yet</b>, said plainly.</li>
+    <li><b>Yellow “Do this”</b> boxes need an action a straight play may not give; <b>pink “Look for”</b> boxes are named weak
+      spots; <b>blue “Your ear”</b> boxes are for sound; <b>P cards</b> are yours to answer.</li>
+  </ul>
+</section>
+<div id="content"></div>
+</main>
+</div>
+<div id="export"><div>
+  <p style="margin-top:0"><b>Your verdicts.</b> Copied to the clipboard if the browser allowed it; otherwise select all and copy.</p>
+  <textarea id="exporttext" readonly></textarea>
+  <p style="margin-bottom:0;text-align:right"><button id="closeexport">Close</button></p>
+</div></div>
+
+<script>
+const P = (name) => `assets/${name}`;
+const pair = (b, a, cap) => ({ b: P(b), a: P(a), cap });
+const one = (src, cap) => ({ src: P(src), cap });
+const clip = (b, a, cap, lb = 'Before', la = 'After') => ({ b: P(b), a: P(a), cap, lb, la });
+const solo = (src, cap) => ({ src: P(src), cap });
+
+const ROOMS = [
+{ id: 'room1', name: 'First room', lead: 'One line on where this room starts and what to watch.', items: [
+  { title: 'What changed, as the player sees it', answers: '3 · P2', parcel: 'A1', starts: [['chapterStart', 'Where to jump in']],
+    said: "“The owner's words from last round, verbatim.”",
+    stage: "Only if a straight play may not reach it: the stroke or wait needed.",
+    see: "What changed and the cause that was found, in one or two plain sentences.",
+    hear: "For sound cards: what to listen for.",
+    look: ["A weak spot the build still has, with where it shows.", "What nobody has watched or heard."],
+    ear: ["What only the owner's ear can judge."],
+    pairs: [one('a1-board.jpg', 'Before above, after below: what the board shows')],
+    clips: [clip('a1-before.mp4', 'a1-after.mp4', 'Real speed, at the owner\'s size')],
+    links: [['a1-marks.txt', 'Marks (text)']] },
+]},
+];
+
+const IDEAS = {
+room1: [
+  { id: 'P1', kind: 'Your ruling', title: 'A change the build was less sure of', answers: ['Build it', 'Not now', 'Not sure'],
+    now: "What is there now, with the evidence.",
+    idea: "The proposal.",
+    cost: "What it costs (time, look, performance).",
+    take: "Claude's view and why.",
+    pics: [[P('p1-evidence.jpg'), 'What the picture shows']] },
+  { id: 'W1', kind: 'Still weak', title: 'One weakness, its own card', answers: ['Fix it', 'Leave it', 'Not sure'],
+    now: "The weakness, where and when it shows.",
+    take: "What fixing it would take.",
+    pics: [[P('w1-frame.jpg'), 'The frame that shows it, full size']] },
+],
+};
+
+const KEY = '__PROJECT__-__FEATURE__-r__N__-playtest-verdicts-v1';
+const BASEKEY = '__PROJECT__-__FEATURE__-r__N__-playtest-base';
+let verdicts = {};
+try { verdicts = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch { verdicts = {}; }
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(verdicts)); } catch {} };
+const stored = (k) => { try { return localStorage.getItem(k); } catch { return null; } };
+const baseInput = document.getElementById('base');
+baseInput.value = stored(BASEKEY) || '__GAME_URL__';
+baseInput.addEventListener('change', () => { try { localStorage.setItem(BASEKEY, baseInput.value); } catch {} wireStarts(); });
+const gameUrl = (chapter) => {
+  const base = baseInput.value.trim().replace(/\/?$/, '/');
+  return chapter ? `${base}?chapter=${chapter}` : base;
+};
+
+const el = (tag, attrs = {}, ...kids) => {
+  const node = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === 'class') node.className = v; else if (k === 'html') node.innerHTML = v; else node.setAttribute(k, v);
+  }
+  for (const kid of kids.flat()) if (kid != null) node.append(kid);
+  return node;
+};
+const fig = (src, label, cap) => el('figure', {},
+  el('a', { href: src, target: '_blank' }, el('img', { src, loading: 'lazy', decoding: 'async', alt: cap || label || '' })),
+  el('figcaption', {}, label ? el('b', {}, label) : null, label && cap ? ' · ' : '', cap || ''));
+const row = (cls, name, body) => el('dl', { class: `row ${cls}` }, el('dt', {}, name), el('dd', {}, body));
+const list = (items) => items.length === 1 ? items[0] : el('ul', {}, items.map((t) => el('li', {}, t)));
+const clipsEl = (clips) => el('div', { class: 'clips' }, clips.map((c) => c.src
+  ? el('div', { class: 'clip single' }, el('div', { class: 'cap' }, c.cap), el('div', {}, el('audio', { controls: '', preload: 'none', src: c.src })))
+  : el('div', { class: 'clip' },
+    el('div', { class: 'cap' }, c.cap),
+    el('div', {}, el('label', {}, c.lb), el('audio', { controls: '', preload: 'none', src: c.b })),
+    el('div', {}, el('label', {}, c.la), el('audio', { controls: '', preload: 'none', src: c.a })))));
+const linksEl = (links) => row('links', 'Files', links.map(([f, label]) => el('a', { href: P(f), target: '_blank' }, label)));
+
+const content = document.getElementById('content');
+const cards = new Map();
+const ideaCards = new Map();
+let n = 0;
+for (const room of ROOMS) for (const item of room.items) item.n = ++n;
+const TOTAL = n;
+document.getElementById('navsub').textContent = `${TOTAL} changes, in the order you meet them`;
+
+for (const room of ROOMS) {
+  const section = el('section', { id: room.id });
+  const count = room.items.length;
+  section.append(el('h2', {}, room.name, el('small', {}, `${count} change${count > 1 ? 's' : ''}`)));
+  if (room.lead) section.append(el('p', { class: 'roomlead' }, room.lead));
+  for (const item of room.items) {
+    const card = el('article', { class: 'card', id: `c${item.n}` });
+    card.append(el('header', {},
+      el('span', { class: 'n' }, `${item.n} / ${TOTAL}`), el('h3', {}, item.title),
+      item.audio ? el('span', { class: 'chip audio' }, 'sound') : null,
+      el('span', { class: 'chip' }, `answers ${item.answers}`)));
+    if (item.starts.length) {
+      card.append(el('div', { class: 'starts' }, item.starts.map(([c, label]) =>
+        el('a', { 'data-c': c, href: '#', class: 'jump', title: `?chapter=${c}` }, `▶ ${label}`)),
+        el('span', {}, item.starts.map(([c]) => `?chapter=${c}`).join('  '))));
+    }
+    if (item.said) card.append(row('said', 'You said', item.said));
+    if (item.stage) card.append(row('stage', 'Do this', item.stage));
+    if (item.see) card.append(row('', 'What changed', item.see));
+    if (item.hear) card.append(row('', 'You hear', item.hear));
+    if (item.look) card.append(row('judge', 'Look for', list(item.look)));
+    if (item.ear) card.append(row('ear', 'Your ear', list(item.ear)));
+    for (const p of item.pairs || []) {
+      card.append(p.src ? el('div', { class: 'pairs one' }, fig(p.src, '', p.cap))
+        : el('div', { class: 'pairs' }, fig(p.b, 'Before', p.cap), fig(p.a, 'After', p.cap)));
+    }
+    if (item.clips) card.append(clipsEl(item.clips));
+    if (item.links) card.append(linksEl(item.links));
+    const note = el('input', { type: 'text', placeholder: 'Your note, in your words (optional)' });
+    note.value = verdicts[item.n]?.note || '';
+    note.addEventListener('input', () => { verdicts[item.n] = { ...verdicts[item.n], note: note.value }; save(); });
+    const buttons = ['approve', 'change', 'drop'].map((v) => {
+      const b = el('button', { class: v, type: 'button' }, v[0].toUpperCase() + v.slice(1));
+      b.addEventListener('click', () => {
+        const now = verdicts[item.n]?.v === v ? undefined : v;
+        verdicts[item.n] = { ...verdicts[item.n], v: now }; save(); paint();
+      });
+      return b;
+    });
+    card.append(el('div', { class: 'verdict' }, buttons, note));
+    cards.set(item.n, { card, buttons, item });
+    section.append(card);
+  }
+  const roomIdeas = IDEAS[room.id] || [];
+  if (roomIdeas.length) section.append(el('h4', { class: 'ideashead' }, 'Yours to answer'));
+  for (const idea of roomIdeas) {
+    const card = el('article', { class: 'card idea', id: idea.id });
+    card.append(el('header', {}, el('span', { class: 'n' }, idea.id), el('h3', {}, idea.title), el('span', { class: 'chip kind' }, idea.kind)));
+    card.append(row('', 'Now', Array.isArray(idea.now) ? list(idea.now) : idea.now));
+    if (idea.idea) card.append(row('', 'The idea', idea.idea));
+    if (idea.cost) card.append(row('', 'It costs', idea.cost));
+    if (idea.take) card.append(row('take', "Claude's view", idea.take));
+    if (idea.pics) card.append(el('div', { class: 'pairs one' }, idea.pics.map(([src, cap]) => fig(src, '', cap))));
+    if (idea.clips) card.append(clipsEl(idea.clips));
+    if (idea.links) card.append(linksEl(idea.links));
+    const note = el('input', { type: 'text', placeholder: 'Your note, in your words (optional)' });
+    note.value = verdicts[idea.id]?.note || '';
+    note.addEventListener('input', () => { verdicts[idea.id] = { ...verdicts[idea.id], note: note.value }; save(); });
+    const labels = idea.answers || ['Build it', 'Not now', 'No'];
+    const buttons = [['build', 'approve'], ['later', 'change'], ['no', 'drop']].map(([v, cls], i) => {
+      const b = el('button', { class: cls, type: 'button', 'data-v': v }, labels[i]);
+      b.addEventListener('click', () => {
+        const now = verdicts[idea.id]?.v === v ? undefined : v;
+        verdicts[idea.id] = { ...verdicts[idea.id], v: now }; save(); paint();
+      });
+      return b;
+    });
+    card.append(el('div', { class: 'verdict' }, buttons, note));
+    ideaCards.set(idea.id, { card, buttons, idea, labels });
+    section.append(card);
+  }
+  content.append(section);
+}
+
+function wireStarts() {
+  for (const a of document.querySelectorAll('a.jump')) { a.href = gameUrl(a.dataset.c); a.target = 'updraft-game'; }
+}
+
+function paint() {
+  const tally = { approve: 0, change: 0, drop: 0 };
+  for (const [key, { card, buttons }] of cards) {
+    const v = verdicts[key]?.v;
+    card.className = `card${v ? ' ' + v : ''}`;
+    buttons.forEach((b) => b.classList.toggle('on', b.classList.contains(v)));
+    if (v) tally[v]++;
+  }
+  let ideasDone = 0;
+  for (const [id, { card, buttons }] of ideaCards) {
+    const v = verdicts[id]?.v;
+    const cls = { build: 'approve', later: 'change', no: 'drop' }[v];
+    card.className = `card idea${cls ? ' ' + cls : ''}`;
+    buttons.forEach((b) => b.classList.toggle('on', b.dataset.v === v));
+    if (v) ideasDone++;
+  }
+  const done = tally.approve + tally.change + tally.drop;
+  const pc = (x) => (100 * x / TOTAL).toFixed(2);
+  document.getElementById('tally').innerHTML =
+    `<b>${done}</b> of ${TOTAL} judged<br>${tally.approve} approve · ${tally.change} change · ${tally.drop} drop` +
+    `<div class="bar"><i style="width:${pc(tally.approve)}%;background:var(--green)"></i><i style="width:${pc(tally.change)}%;background:var(--amber)"></i><i style="width:${pc(tally.drop)}%;background:var(--red)"></i></div>` +
+    `<div style="margin-top:8px"><b>${ideasDone}</b> of ${ideaCards.size} P-cards answered</div>`;
+  const rooms = document.getElementById('rooms');
+  rooms.replaceChildren(...ROOMS.map((room) => {
+    const total = room.items.length;
+    const judged = room.items.filter((i) => verdicts[i.n]?.v).length;
+    return el('a', { class: 'room', href: `#${room.id}` }, el('span', {}, room.name),
+      el('span', { class: `count${total && judged === total ? ' done' : ''}` }, `${judged}/${total}`));
+  }));
+}
+
+document.getElementById('unjudged').addEventListener('click', () => {
+  for (const [key, { card }] of cards) if (!verdicts[key]?.v) { card.scrollIntoView({ block: 'start' }); return; }
+  for (const [id, { card }] of ideaCards) if (!verdicts[id]?.v) { card.scrollIntoView({ block: 'start' }); return; }
+});
+document.getElementById('copy').addEventListener('click', async () => {
+  const lines = ['__TITLE_UPPER__ PLAYTEST (__GAME_URL__ = __BRANCH__ __HEAD__)'];
+  for (const [key, { item }] of cards) {
+    const v = verdicts[key];
+    lines.push(`${String(key).padStart(2)}. ${(v?.v || 'not judged').toUpperCase().padEnd(10)} ${item.title} [answers ${item.answers}; ${item.parcel}]${v?.note ? `\n      note: ${v.note}` : ''}`);
+  }
+  lines.push('', 'YOURS TO ANSWER');
+  for (const [id, { idea, labels }] of ideaCards) {
+    const v = verdicts[id];
+    const word = { build: labels[0], later: labels[1], no: labels[2] }[v?.v]?.toUpperCase() || 'not answered';
+    lines.push(`${id.padEnd(4)}${word.padEnd(22)} ${idea.title}${v?.note ? `\n      note: ${v.note}` : ''}`);
+  }
+  const text = lines.join('\n');
+  document.getElementById('exporttext').value = text;
+  document.getElementById('export').classList.add('open');
+  try { await navigator.clipboard.writeText(text); } catch {}
+  document.getElementById('exporttext').select();
+});
+document.getElementById('closeexport').addEventListener('click', () => document.getElementById('export').classList.remove('open'));
+
+const cardLinks = (pred) => [...cards].filter(([, c]) => pred(c.item)).flatMap(([key], i, all) => [i ? (i === all.length - 1 ? ' and ' : ', ') : '', el('a', { href: `#c${key}` }, String(key))]);
+document.getElementById('staged').append(...cardLinks((item) => item.stage));
+wireStarts();
+paint();
+</script>
+</body>
+</html>
